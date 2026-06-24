@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS-30 | TechFest IIT Bombay</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap');
+  :root {
+    --cyan: #00f5ff; --magenta: #ff0090;
+    --dark: #020b18; --darker: #010810;
+    --panel: #0a1628; --grid: rgba(0,245,255,0.07);
+    --glow-c: 0 0 20px rgba(0,245,255,0.6), 0 0 60px rgba(0,245,255,0.2);
+    --glow-m: 0 0 20px rgba(255,0,144,0.6), 0 0 60px rgba(255,0,144,0.2);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--darker); color:#c8e6f0; font-family:'Inter',sans-serif; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px); background-size:50px 50px; z-index:0; animation:gridMove 20s linear infinite; }
+  body::after { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:1000; }
+  @keyframes gridMove { 0%{background-position:0 0} 100%{background-position:50px 50px} }
+  nav { position:fixed; top:0; width:100%; padding:18px 40px; display:flex; justify-content:space-between; align-items:center; background:rgba(2,11,24,0.85); backdrop-filter:blur(12px); border-bottom:1px solid rgba(0,245,255,0.2); z-index:100; }
+  .nav-logo { font-family:'Orbitron',monospace; font-size:1.3rem; font-weight:900; color:var(--cyan); text-shadow:var(--glow-c); letter-spacing:4px; }
+  .nav-links { display:flex; gap:32px; list-style:none; }
+  .nav-links a { font-family:'Share Tech Mono',monospace; font-size:0.8rem; color:rgba(200,230,240,0.7); text-decoration:none; letter-spacing:2px; transition:color 0.3s; }
+  .nav-links a:hover { color:var(--cyan); text-shadow:var(--glow-c); }
+  .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:120px 20px 60px; position:relative; }
+  .hero-eyebrow { font-family:'Share Tech Mono',monospace; font-size:0.75rem; letter-spacing:5px; color:var(--magenta); text-shadow:var(--glow-m); margin-bottom:24px; animation:fadeInDown 1s ease both; }
+  .hero-title { font-family:'Orbitron',monospace; font-size:clamp(3rem,10vw,8rem); font-weight:900; line-height:0.9; margin-bottom:8px; animation:fadeInUp 1s ease 0.2s both; }
+  .hero-title .line1 { display:block; color:transparent; -webkit-text-stroke:2px var(--cyan); filter:drop-shadow(0 0 30px rgba(0,245,255,0.4)); }
+  .hero-title .line2 { display:block; background:linear-gradient(135deg,var(--cyan),var(--magenta)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero-sub { font-family:'Share Tech Mono',monospace; font-size:clamp(1rem,3vw,1.4rem); color:rgba(200,230,240,0.6); letter-spacing:3px; margin:24px 0 48px; animation:fadeInUp 1s ease 0.4s both; }
+  .hero-sub span { color:var(--cyan); }
+  .hero-stats { display:flex; gap:48px; flex-wrap:wrap; justify-content:center; margin-bottom:48px; animation:fadeInUp 1s ease 0.6s both; }
+  .stat { text-align:center; padding:20px 28px; border:1px solid rgba(0,245,255,0.2); background:rgba(0,245,255,0.03); position:relative; }
+  .stat::before { content:''; position:absolute; width:8px; height:8px; top:-1px; left:-1px; border-color:var(--cyan); border-style:solid; border-width:2px 0 0 2px; }
+  .stat::after { content:''; position:absolute; width:8px; height:8px; bottom:-1px; right:-1px; border-color:var(--cyan); border-style:solid; border-width:0 2px 2px 0; }
+  .stat-num { font-family:'Orbitron',monospace; font-size:2rem; font-weight:700; color:var(--cyan); display:block; text-shadow:var(--glow-c); }
+  .stat-label { font-family:'Share Tech Mono',monospace; font-size:0.7rem; letter-spacing:3px; color:rgba(200,230,240,0.5); margin-top:4px; }
+  .cta-group { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; animation:fadeInUp 1s ease 0.8s both; }
+  .btn-primary { font-family:'Orbitron',monospace; font-size:0.8rem; letter-spacing:3px; padding:16px 36px; background:linear-gradient(135deg,var(--cyan),#0088aa); color:var(--dark); font-weight:700; border:none; cursor:pointer; clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%); transition:all 0.3s; text-decoration:none; display:inline-block; }
+  .btn-primary:hover { box-shadow:var(--glow-c); transform:translateY(-2px); }
+  .btn-secondary { font-family:'Share Tech Mono',monospace; font-size:0.8rem; letter-spacing:3px; padding:16px 36px; background:transparent; color:var(--magenta); border:1px solid var(--magenta); cursor:pointer; transition:all 0.3s; text-decoration:none; display:inline-block; }
+  .btn-secondary:hover { background:rgba(255,0,144,0.1); box-shadow:var(--glow-m); }
+  section { position:relative; z-index:2; }
+  .section-inner { max-width:1100px; margin:0 auto; padding:100px 24px; }
+  .section-tag { font-family:'Share Tech Mono',monospace; font-size:0.7rem; letter-spacing:5px; color:var(--magenta); margin-bottom:12px; display:block; }
+  .section-title { font-family:'Orbitron',monospace; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:700; color:white; margin-bottom:48px; }
+  .section-title span { color:var(--cyan); }
+  .events-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
+  .event-card { background:var(--panel); border:1px solid rgba(0,245,255,0.15); padding:32px; position:relative; transition:all 0.3s; overflow:hidden; }
+  .event-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:linear-gradient(180deg,var(--cyan),var(--magenta)); }
+  .event-card:hover { border-color:rgba(0,245,255,0.4); transform:translateY(-4px); box-shadow:0 8px 40px rgba(0,245,255,0.1); }
+  .event-icon { font-size:2rem; margin-bottom:16px; filter:drop-shadow(0 0 8px rgba(0,245,255,0.6)); }
+  .event-name { font-family:'Orbitron',monospace; font-size:1rem; font-weight:700; color:var(--cyan); margin-bottom:10px; }
+  .event-desc { font-size:0.85rem; line-height:1.6; color:rgba(200,230,240,0.6); }
+  .event-prize { margin-top:20px; font-family:'Share Tech Mono',monospace; font-size:0.75rem; letter-spacing:2px; color:var(--magenta); }
+  .timeline { position:relative; padding-left:32px; }
+  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(180deg,var(--cyan),var(--magenta),transparent); }
+  .tl-item { position:relative; margin-bottom:40px; padding:24px 28px; background:var(--panel); border:1px solid rgba(0,245,255,0.1); }
+  .tl-item::before { content:''; position:absolute; left:-40px; top:50%; transform:translateY(-50%); width:10px; height:10px; background:var(--cyan); box-shadow:var(--glow-c); clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); }
+  .tl-date { font-family:'Share Tech Mono',monospace; font-size:0.7rem; letter-spacing:3px; color:var(--magenta); margin-bottom:8px; }
+  .tl-title { font-family:'Orbitron',monospace; font-size:1rem; color:white; margin-bottom:6px; }
+  .tl-desc { font-size:0.85rem; color:rgba(200,230,240,0.55); }
+  .register-section { background:linear-gradient(135deg,rgba(0,245,255,0.05),rgba(255,0,144,0.05)); border-top:1px solid rgba(0,245,255,0.15); border-bottom:1px solid rgba(255,0,144,0.15); }
+  .register-inner { max-width:700px; margin:0 auto; padding:100px 24px; text-align:center; }
+  .register-desc { color:rgba(200,230,240,0.6); line-height:1.7; margin-bottom:40px; font-size:0.95rem; }
+  footer { padding:40px 24px; text-align:center; border-top:1px solid rgba(0,245,255,0.1); }
+  footer p { font-family:'Share Tech Mono',monospace; font-size:0.7rem; letter-spacing:3px; color:rgba(200,230,240,0.3); }
+  footer span { color:var(--cyan); }
+  .glitch { position:relative; animation:glitch 5s infinite; }
+  @keyframes glitch { 0%,90%,100%{transform:none;filter:none} 92%{transform:skewX(-2deg);filter:hue-rotate(90deg)} 94%{transform:skewX(2deg) scaleX(1.02);filter:hue-rotate(-90deg)} 96%{transform:none;filter:none} 98%{transform:skewX(-1deg);filter:brightness(1.5)} }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeInDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+  .pulse-ring { position:absolute; border:1px solid rgba(0,245,255,0.08); border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); animation:pulse 4s ease-in-out infinite; }
+  .pulse-ring:nth-child(1){width:600px;height:600px}
+  .pulse-ring:nth-child(2){width:900px;height:900px;animation-delay:1s}
+  .pulse-ring:nth-child(3){width:1200px;height:1200px;animation-delay:2s}
+  @keyframes pulse { 0%,100%{opacity:0.3;transform:translate(-50%,-50%) scale(1)} 50%{opacity:0.1;transform:translate(-50%,-50%) scale(1.05)} }
+  .blink{animation:blink 1s step-end infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">NEXUS<span style="color:var(--magenta)">—</span>30</div>
+  <ul class="nav-links">
+    <li><a href="#events">EVENTS</a></li>
+    <li><a href="#timeline">TIMELINE</a></li>
+    <li><a href="#register">REGISTER</a></li>
+  </ul>
+</nav>
+<section class="hero" style="z-index:2;">
+  <div class="pulse-ring"></div><div class="pulse-ring"></div><div class="pulse-ring"></div>
+  <div class="hero-eyebrow">▸ TECHFEST IIT BOMBAY · 30TH EDITION · DECEMBER 2026</div>
+  <h1 class="hero-title glitch">
+    <span class="line1">CYBORG</span>
+    <span class="line2">NEXUS</span>
+  </h1>
+  <p class="hero-sub">WHERE <span>HUMAN MEETS MACHINE</span> <span class="blink">_</span></p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">180K+</span><div class="stat-label">PARTICIPANTS</div></div>
+    <div class="stat"><span class="stat-num">110+</span><div class="stat-label">COUNTRIES</div></div>
+    <div class="stat"><span class="stat-num">30</span><div class="stat-label">EDITIONS</div></div>
+    <div class="stat"><span class="stat-num">72H</span><div class="stat-label">OF EVENTS</div></div>
+  </div>
+  <div class="cta-group">
+    <a href="#register" class="btn-primary">INITIALISE SEQUENCE</a>
+    <a href="#events" class="btn-secondary">SCAN EVENTS</a>
+  </div>
+</section>
+<section id="events" style="background:var(--dark);">
+  <div class="section-inner">
+    <span class="section-tag">// NEURAL_EVENTS.EXE</span>
+    <h2 class="section-title">INTERFACE <span>MODULES</span></h2>
+    <div class="events-grid">
+      <div class="event-card"><div class="event-icon">🤖</div><div class="event-name">ROBO WARS</div><div class="event-desc">Build combat robots and battle in the arena.</div><div class="event-prize">▸ PRIZE POOL: ₹2,00,000</div></div>
+      <div class="event-card"><div class="event-icon">🧠</div><div class="event-name">NEURAL HACK</div><div class="event-desc">48-hour AI hackathon. Build systems that blur the boundary between biological and machine intelligence.</div><div class="event-prize">▸ PRIZE POOL: ₹1,50,000</div></div>
+      <div class="event-card"><div class="event-icon">⚡</div><div class="event-name">CIRCUIT BREACH</div><div class="event-desc">Electronics design challenge with cyborg-inspired circuits.</div><div class="event-prize">▸ PRIZE POOL: ₹1,00,000</div></div>
+      <div class="event-card"><div class="event-icon">🌐</div><div class="event-name">TERRA SYNC</div><div class="event-desc">Real-time climate crisis simulation using AI and satellite data.</div><div class="event-prize">▸ PRIZE POOL: ₹75,000</div></div>
+      <div class="event-card"><div class="event-icon">🔬</div><div class="event-name">BIOSYNTH</div><div class="event-desc">Design prosthetics, implants, and bio-electronic interfaces.</div><div class="event-prize">▸ PRIZE POOL: ₹1,25,000</div></div>
+      <div class="event-card"><div class="event-icon">🎮</div><div class="event-name">VR RIFT</div><div class="event-desc">Immersive VR experience design contest.</div><div class="event-prize">▸ PRIZE POOL: ₹80,000</div></div>
+    </div>
+  </div>
+</section>
+<section id="timeline">
+  <div class="section-inner">
+    <span class="section-tag">// CHRONOLOGICAL_SEQUENCE.LOG</span>
+    <h2 class="section-title">MISSION <span>TIMELINE</span></h2>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-date">NOV 01, 2026</div><div class="tl-title">REGISTRATION OPENS</div><div class="tl-desc">Portal activates across 110+ countries.</div></div>
+      <div class="tl-item"><div class="tl-date">NOV 20, 2026</div><div class="tl-title">EARLY BIRD ENDS</div><div class="tl-desc">Priority registration window closes.</div></div>
+      <div class="tl-item"><div class="tl-date">DEC 05, 2026</div><div class="tl-title">SUBMISSION DEADLINE</div><div class="tl-desc">All uploads and team formations complete.</div></div>
+      <div class="tl-item"><div class="tl-date">DEC 19–21, 2026</div><div class="tl-title">NEXUS-30 GOES LIVE</div><div class="tl-desc">72 hours of events at IIT Bombay, Mumbai.</div></div>
+    </div>
+  </div>
+</section>
+<section id="register" class="register-section">
+  <div class="register-inner">
+    <span class="section-tag" style="display:block;margin-bottom:12px;">// INITIATE_UPLINK</span>
+    <h2 class="section-title">READY TO <span>MERGE?</span></h2>
+    <p class="register-desc">Join 180,000+ participants from 110 countries at Asia's largest Science & Technology Festival.</p>
+    <div class="cta-group">
+      <a href="https://techfest.org" target="_blank" class="btn-primary">BEGIN REGISTRATION</a>
+      <a href="#events" class="btn-secondary">EXPLORE EVENTS</a>
+    </div>
+  </div>
+</section>
+<footer>
+  <p>NEXUS<span>—</span>30 · TECHFEST IIT BOMBAY · 30TH EDITION</p>
+  <p style="margin-top:8px;">CAMPUS AMBASSADOR · IET DDU GORAKHPUR · <span>RASHII2312</span></p>
+</footer>
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.event-card,.tl-item').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(30px)';
+  el.style.transition='all 0.6s ease';observer.observe(el);
+});
+const eyebrow=document.querySelector('.hero-eyebrow');
+const text=eyebrow.textContent;eyebrow.textContent='';let i=0;
+const type=()=>{if(i<text.length){eyebrow.textContent+=text[i++];setTimeout(type,40);}};
+setTimeout(type,500);
+</script>
+</body>
+</html>
