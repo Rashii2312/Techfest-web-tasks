@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechFest 3D | IIT Bombay</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap');
+:root{--void:#050510;--neon:#6c63ff;--gold:#ffd700;--white:#f0f0ff;--dim:rgba(240,240,255,0.5);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--void);color:var(--white);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;}
+nav{position:fixed;top:0;width:100%;z-index:200;padding:20px 48px;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,16,0.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(108,99,255,0.2);}
+.logo{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;letter-spacing:3px;background:linear-gradient(90deg,var(--neon),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+nav ul{display:flex;gap:32px;list-style:none;}
+nav a{font-size:0.8rem;letter-spacing:2px;color:var(--dim);text-decoration:none;font-family:'Space Mono',monospace;transition:color 0.3s;}
+nav a:hover{color:var(--neon);}
+#hero{height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+canvas#space{position:absolute;inset:0;z-index:0;}
+.hero-content{position:relative;z-index:2;text-align:center;animation:riseIn 1.2s cubic-bezier(0.16,1,0.3,1) both;}
+@keyframes riseIn{from{opacity:0;transform:translateY(60px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.badge{display:inline-block;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:4px;padding:8px 20px;border:1px solid rgba(108,99,255,0.5);background:rgba(108,99,255,0.1);color:var(--neon);margin-bottom:28px;animation:badgePulse 3s ease infinite;}
+@keyframes badgePulse{0%,100%{border-color:rgba(108,99,255,0.5)}50%{border-color:rgba(108,99,255,1);box-shadow:0 0 20px rgba(108,99,255,0.4)}}
+.hero-h1{font-size:clamp(3.5rem,12vw,9rem);font-weight:700;line-height:0.85;letter-spacing:-2px;margin-bottom:24px;}
+.hero-h1 .t1{display:block;color:var(--white);text-shadow:0 0 80px rgba(108,99,255,0.4);}
+.hero-h1 .t2{display:block;background:linear-gradient(90deg,var(--neon),var(--gold),var(--neon));background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.hero-sub{font-size:clamp(0.9rem,2vw,1.1rem);color:var(--dim);letter-spacing:1px;max-width:520px;margin:0 auto 40px;line-height:1.7;}
+.scroll-hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;text-align:center;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:3px;color:var(--dim);animation:bounce 2s ease infinite;}
+.scroll-hint::after{content:'↓';display:block;font-size:1.2rem;color:var(--neon);margin-top:6px;}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+#cards{padding:120px 24px;background:linear-gradient(180deg,var(--void),#0a0a2e);}
+.cards-wrap{max-width:1100px;margin:0 auto;}
+.s-label{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:5px;color:var(--neon);margin-bottom:16px;display:block;}
+.s-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;margin-bottom:60px;line-height:1.1;}
+.s-title em{font-style:normal;color:var(--gold);}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
+.card-3d{background:linear-gradient(135deg,rgba(108,99,255,0.1),rgba(255,215,0,0.05));border:1px solid rgba(108,99,255,0.2);padding:40px 32px;cursor:default;transition:transform 0.1s ease,box-shadow 0.3s ease;transform-style:preserve-3d;position:relative;overflow:hidden;}
+.card-3d::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(108,99,255,0.15),transparent 60%);opacity:0;transition:opacity 0.3s;pointer-events:none;}
+.card-3d:hover::after{opacity:1;}
+.card-num{font-family:'Space Mono',monospace;font-size:3rem;font-weight:700;color:rgba(108,99,255,0.2);margin-bottom:16px;line-height:1;}
+.card-name{font-size:1.3rem;font-weight:700;margin-bottom:12px;color:var(--white);}
+.card-desc{font-size:0.9rem;color:var(--dim);line-height:1.7;margin-bottom:20px;}
+.card-tag{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:2px;padding:6px 14px;border:1px solid rgba(255,215,0,0.3);color:var(--gold);display:inline-block;}
+#orbit{padding:120px 24px;display:flex;align-items:center;justify-content:center;min-height:80vh;position:relative;overflow:hidden;}
+.orbit-wrap{max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.orbit-text p{color:var(--dim);line-height:1.8;font-size:0.95rem;margin-bottom:32px;}
+.btn{display:inline-block;font-family:'Space Mono',monospace;font-size:0.8rem;letter-spacing:2px;padding:14px 32px;background:linear-gradient(135deg,var(--neon),#4a44cc);color:white;text-decoration:none;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));transition:all 0.3s;border:none;cursor:pointer;}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(108,99,255,0.5);}
+.solar{width:320px;height:320px;position:relative;margin:0 auto;}
+.sun{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:radial-gradient(circle,var(--gold),#ff8c00);border-radius:50%;box-shadow:0 0 40px rgba(255,215,0,0.8),0 0 80px rgba(255,215,0,0.3);}
+.orbit-ring{position:absolute;top:50%;left:50%;border:1px solid rgba(255,255,255,0.1);border-radius:50%;transform:translate(-50%,-50%) rotateX(70deg);}
+.o1{width:140px;height:140px;animation:spin 4s linear infinite;}
+.o2{width:220px;height:220px;animation:spin 8s linear infinite;}
+.o3{width:300px;height:300px;animation:spin 14s linear infinite;}
+@keyframes spin{to{transform:translate(-50%,-50%) rotateX(70deg) rotate(360deg);}}
+.planet{position:absolute;border-radius:50%;top:50%;left:0;transform:translateY(-50%);}
+.p1{width:16px;height:16px;background:var(--neon);box-shadow:0 0 15px var(--neon);}
+.p2{width:20px;height:20px;background:#ff6b6b;box-shadow:0 0 15px #ff6b6b;}
+.p3{width:14px;height:14px;background:#00ffaa;box-shadow:0 0 15px #00ffaa;}
+#stats{padding:100px 24px;background:linear-gradient(180deg,#0a0a2e,var(--void));}
+.stats-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2px;}
+.stat-box{padding:48px 32px;text-align:center;background:rgba(108,99,255,0.05);border:1px solid rgba(108,99,255,0.1);transition:all 0.3s;}
+.stat-box:hover{background:rgba(108,99,255,0.1);}
+.stat-box .num{font-family:'Space Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--neon),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:8px;}
+.stat-box .lbl{font-size:0.75rem;letter-spacing:3px;color:var(--dim);font-family:'Space Mono',monospace;}
+footer{padding:40px;text-align:center;border-top:1px solid rgba(108,99,255,0.15);}
+footer p{font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:3px;color:rgba(240,240,255,0.25);}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">TECHFEST·30</div>
+  <ul><li><a href="#cards">EVENTS</a></li><li><a href="#orbit">ABOUT</a></li><li><a href="#stats">STATS</a></li></ul>
+</nav>
+<section id="hero">
+  <canvas id="space"></canvas>
+  <div class="hero-content">
+    <div class="badge">◈ DECEMBER 2026 · IIT BOMBAY · 30TH EDITION</div>
+    <h1 class="hero-h1"><span class="t1">TECH</span><span class="t2">FEST</span></h1>
+    <p class="hero-sub">Asia's largest Science & Technology Festival. 180,000 minds. 110 countries. One stage.</p>
+    <a href="#cards" class="btn">EXPLORE THE UNIVERSE →</a>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+<section id="cards">
+  <div class="cards-wrap">
+    <span class="s-label">// FEATURED_EVENTS</span>
+    <h2 class="s-title">WHERE IDEAS BECOME <em>REALITY</em></h2>
+    <div class="card-grid">
+      <div class="card-3d"><div class="card-num">01</div><div class="card-name">ROBO WARS</div><div class="card-desc">Build battle robots and clash in the ultimate mechanical arena.</div><span class="card-tag">ROBOTICS</span></div>
+      <div class="card-3d"><div class="card-num">02</div><div class="card-name">AI HACKATHON</div><div class="card-desc">48 hours to build AI that changes the world.</div><span class="card-tag">ARTIFICIAL INTELLIGENCE</span></div>
+      <div class="card-3d"><div class="card-num">03</div><div class="card-name">TERRA SYNC</div><div class="card-desc">Real-time climate crisis simulation powered by AI and satellite data.</div><span class="card-tag">CLIMATE TECH</span></div>
+      <div class="card-3d"><div class="card-num">04</div><div class="card-name">INNOVATION EXPO</div><div class="card-desc">Showcase your breakthrough invention to 180,000 peers.</div><span class="card-tag">SHOWCASE</span></div>
+      <div class="card-3d"><div class="card-num">05</div><div class="card-name">DRONE RACE</div><div class="card-desc">FPV drone racing through a custom obstacle course.</div><span class="card-tag">AEROSPACE</span></div>
+      <div class="card-3d"><div class="card-num">06</div><div class="card-name">BIOTECH SPRINT</div><div class="card-desc">Design the future of medicine built today.</div><span class="card-tag">BIOENGINEERING</span></div>
+    </div>
+  </div>
+</section>
+<section id="orbit">
+  <div class="orbit-wrap">
+    <div class="orbit-text">
+      <span class="s-label">// ABOUT_TECHFEST</span>
+      <h2 class="s-title" style="font-size:clamp(2rem,4vw,3rem);margin-bottom:24px;">30 YEARS OF <em>IMPACT</em></h2>
+      <p>TechFest IIT Bombay is not just a festival. It is a movement. For 30 editions, it has been the launchpad for ideas that went on to change industries.</p>
+      <p>Every December, the brightest minds from across the world converge at IIT Bombay to compete, collaborate, and create.</p>
+      <a href="https://techfest.org" class="btn" target="_blank">VISIT TECHFEST.ORG</a>
+    </div>
+    <div class="solar">
+      <div class="sun"></div>
+      <div class="orbit-ring o1"><div class="planet p1"></div></div>
+      <div class="orbit-ring o2"><div class="planet p2"></div></div>
+      <div class="orbit-ring o3"><div class="planet p3"></div></div>
+    </div>
+  </div>
+</section>
+<section id="stats">
+  <div style="text-align:center;margin-bottom:60px;">
+    <span class="s-label" style="display:block;">// SYSTEM_METRICS</span>
+    <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:700;">THE NUMBERS SPEAK</h2>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-box"><span class="num" data-val="180000">0</span><div class="lbl">PARTICIPANTS</div></div>
+    <div class="stat-box"><span class="num" data-val="110">0</span><div class="lbl">COUNTRIES</div></div>
+    <div class="stat-box"><span class="num" data-val="30">0</span><div class="lbl">EDITIONS</div></div>
+    <div class="stat-box"><span class="num" data-val="500">0</span><div class="lbl">EVENTS</div></div>
+  </div>
+</section>
+<footer>
+  <p>TECHFEST IIT BOMBAY · 30TH EDITION · DECEMBER 2026</p>
+  <p style="margin-top:8px;">BUILT BY CAMPUS AMBASSADOR · RASHII2312</p>
+</footer>
+<script>
+const canvas=document.getElementById('space');
+const ctx=canvas.getContext('2d');
+let W,H,stars=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+function Star(){this.x=Math.random()*W;this.y=Math.random()*H;this.z=Math.random()*W;this.pz=this.z;}
+for(let i=0;i<600;i++)stars.push(new Star());
+function drawStars(){
+  ctx.fillStyle='rgba(5,5,16,0.2)';ctx.fillRect(0,0,W,H);
+  stars.forEach(s=>{
+    s.z-=2;if(s.z<=0){s.x=Math.random()*W;s.y=Math.random()*H;s.z=W;s.pz=s.z;}
+    const sx=(s.x-W/2)*(W/s.z)+W/2,sy=(s.y-H/2)*(W/s.z)+H/2;
+    const px=(s.x-W/2)*(W/s.pz)+W/2,py=(s.y-H/2)*(W/s.pz)+H/2;
+    const size=(1-s.z/W)*3;
+    const grad=ctx.createLinearGradient(px,py,sx,sy);
+    grad.addColorStop(0,'transparent');grad.addColorStop(1,`rgba(180,170,255,${1-s.z/W})`);
+    ctx.beginPath();ctx.strokeStyle=grad;ctx.lineWidth=size;ctx.moveTo(px,py);ctx.lineTo(sx,sy);ctx.stroke();
+    s.pz=s.z;
+  });requestAnimationFrame(drawStars);
+}
+drawStars();
+document.querySelectorAll('.card-3d').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=e.clientX-r.left,y=e.clientY-r.top;
+    const rotX=-(y-r.height/2)/r.height*12,rotY=(x-r.width/2)/r.width*12;
+    card.style.transform=`perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(10px)`;
+    card.style.setProperty('--mx',`${x/r.width*100}%`);card.style.setProperty('--my',`${y/r.height*100}%`);
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform='perspective(600px) rotateX(0) rotateY(0) translateZ(0)';});
+});
+const counters=document.querySelectorAll('.num[data-val]');
+const countObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,target=+el.dataset.val;let cur=0;
+    const step=Math.ceil(target/80);
+    const fmt=v=>v>=1000?(v/1000).toFixed(0)+'K+':v+'+';
+    const tick=()=>{cur=Math.min(cur+step,target);el.textContent=fmt(cur);if(cur<target)requestAnimationFrame(tick);};
+    tick();countObs.unobserve(el);
+  });
+},{threshold:0.5});
+counters.forEach(c=>countObs.observe(c));
+</script>
+</body>
+                                                                                                  </html>
